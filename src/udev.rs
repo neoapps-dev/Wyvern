@@ -687,7 +687,7 @@ impl Drop for SurfaceData {
     }
 }
 
-struct BackendData {
+pub struct BackendData {
     surfaces: HashMap<crtc::Handle, SurfaceData>,
     non_desktop_connectors: Vec<(connector::Handle, crtc::Handle)>,
     leasing_global: Option<DrmLeaseState>,

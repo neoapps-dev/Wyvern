@@ -43,7 +43,7 @@ version = "0.13.0"
 
 [build-dependencies]
 gl_generator = "0.14"
-wayland-scanner = "0.28"
+wayland-scanner = "0.28" # old, i know.
 
 [features]
 debug = ["fps_ticker", "image/png", "renderdoc"]

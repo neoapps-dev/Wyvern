@@ -1,3 +1,4 @@
+use wayland_server::GlobalDispatch;
 use std::{
     collections::HashMap,
     os::unix::io::OwnedFd,
@@ -303,7 +304,6 @@ impl<BackendData: Backend> SeatHandler for WyvernState<BackendData> {
 
     fn focus_changed(&mut self, seat: &Seat<Self>, target: Option<&KeyboardFocusTarget>) {
         let dh = &self.display_handle;
-
         let wl_surface = target.and_then(WaylandFocus::wl_surface);
 
         let focus = wl_surface.and_then(|s| dh.get_client(s.id()).ok());
@@ -693,7 +693,6 @@ impl<BackendData: Backend + 'static> WyvernState<BackendData> {
 
         #[cfg(feature = "xwayland")]
         XWaylandKeyboardGrabState::new::<Self>(&dh.clone());
-
         WyvernState {
             backend_data,
             display_handle: dh,
