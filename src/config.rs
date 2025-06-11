@@ -9,11 +9,21 @@ pub struct Config {
     pub keyboard_shortcuts: HashMap<String, String>,
     pub startup_apps: Vec<String>,
     pub display: Display,
+    pub keyboard: KeyboardOptions,
+}
+
+#[derive(Debug, Deserialize)]
+pub struct KeyboardOptions {
+    pub layout: String,
+    pub model: String,
+    pub options: String,
+    pub variant: String,
+    pub rules: String,
 }
 
 #[derive(Debug, Deserialize)]
 pub struct Display {
-    pub scale: u32
+    pub scale: u32,
 }
 
 impl Config {
@@ -45,7 +55,14 @@ impl Default for Config {
             terminal: "weston-terminal".into(),
             keyboard_shortcuts,
             startup_apps: vec!["waybar".into()],
-            display: Display{ scale: 1 }
+            display: Display { scale: 1 },
+            keyboard: KeyboardOptions {
+                layout: "en".into(),
+                model: "pc105".into(),
+                options: "grp:alt_shift_toggle".into(),
+                variant: "".into(),
+                rules: "evdev".into(),
+            },
         }
     }
 }

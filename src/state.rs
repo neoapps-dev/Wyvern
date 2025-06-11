@@ -1,3 +1,4 @@
+use crate::config::Config;
 use wayland_server::GlobalDispatch;
 use std::{
     collections::HashMap,
@@ -117,7 +118,8 @@ use smithay::{
 #[cfg(feature = "xwayland")]
 use crate::cursor::Cursor;
 use crate::{
-    focus::{KeyboardFocusTarget, PointerFocusTarget}, shell::WindowElement
+    focus::{KeyboardFocusTarget, PointerFocusTarget},
+    shell::WindowElement,
 };
 #[cfg(feature = "xwayland")]
 use smithay::{
@@ -681,10 +683,20 @@ impl<BackendData: Backend + 'static> WyvernState<BackendData> {
         // init input
         let seat_name = backend_data.seat_name();
         let mut seat = seat_state.new_wl_seat(&dh, seat_name.clone());
-
+        let cfg = Config::load();
         let pointer = seat.add_pointer();
-        seat.add_keyboard(XkbConfig::default(), 200, 25)
-            .expect("Failed to initialize the keyboard");
+        seat.add_keyboard(
+            XkbConfig {
+                layout: &cfg.keyboard.layout,
+                model: &cfg.keyboard.model,
+                options: Some(cfg.keyboard.options),
+                variant: &cfg.keyboard.variant,
+                rules: &cfg.keyboard.rules,
+            },
+            200,
+            25,
+        )
+        .expect("Failed to initialize the keyboard");
 
         let keyboard_shortcuts_inhibit_state = KeyboardShortcutsInhibitState::new::<Self>(&dh);
 

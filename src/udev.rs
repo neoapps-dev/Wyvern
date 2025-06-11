@@ -1,11 +1,3 @@
-use std::{
-    collections::hash_map::HashMap,
-    io,
-    ops::Not,
-    path::Path,
-    sync::{atomic::Ordering, Mutex, Once},
-    time::{Duration, Instant},
-};
 use crate::config::Config;
 use crate::{
     drawing::*,
@@ -47,8 +39,7 @@ use smithay::{
             element::{memory::MemoryRenderBuffer, AsRenderElements, RenderElementStates},
             gles::GlesRenderer,
             multigpu::{gbm::GbmGlesBackend, GpuManager, MultiRenderer},
-            Bind, BufferType, ExportMem, Offscreen,
-            DebugFlags, ImportDma, ImportMemWl,
+            Bind, BufferType, DebugFlags, ExportMem, ImportDma, ImportMemWl, Offscreen,
         },
         session::{
             libseat::{self, LibSeatSession},
@@ -100,6 +91,14 @@ use smithay::{
 use smithay_drm_extras::{
     display_info,
     drm_scanner::{DrmScanEvent, DrmScanner},
+};
+use std::{
+    collections::hash_map::HashMap,
+    io,
+    ops::Not,
+    path::Path,
+    sync::{atomic::Ordering, Mutex, Once},
+    time::{Duration, Instant},
 };
 use tracing::{debug, error, info, trace, warn};
 use wayland_server::protocol::wl_output::WlOutput;

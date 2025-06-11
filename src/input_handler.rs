@@ -1,10 +1,13 @@
-use std::{convert::TryInto, process::Command, sync::atomic::Ordering};
 use crate::config::Config;
-use crate::{focus::PointerFocusTarget, shell::FullscreenSurface, WyvernState};
 #[cfg(feature = "udev")]
 use crate::udev::UdevData;
+use crate::{focus::PointerFocusTarget, shell::FullscreenSurface, WyvernState};
 #[cfg(feature = "udev")]
 use smithay::backend::renderer::DebugFlags;
+use smithay::input::keyboard::xkb::Keymap;
+use smithay::input::keyboard::XkbConfig;
+use std::sync::atomic::AtomicUsize;
+use std::{convert::TryInto, process::Command, sync::atomic::Ordering};
 
 use smithay::{
     backend::input::{
@@ -66,7 +69,6 @@ use smithay::{
 };
 
 static mut SHOULD_AUTOSTART: bool = true;
-
 impl<BackendData: Backend> WyvernState<BackendData> {
     fn process_common_key_action(&mut self, action: KeyAction) {
         // i know its the worst place to put this in:
@@ -112,9 +114,9 @@ impl<BackendData: Backend> WyvernState<BackendData> {
             KeyAction::Run(cmd) => {
                 info!(cmd, "Starting program");
                 let mut parts = shell_words::split(&cmd).expect("Invalid shell command");
-    if parts.is_empty() {
-        return;
-    }
+                if parts.is_empty() {
+                    return;
+                }
                 let program = parts.remove(0);
                 if let Err(e) = Command::new(program)
                     .args(parts)
